@@ -1,22 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const navToggle = document.querySelector(".nav-toggle");
+  const toggle = document.querySelector(".nav-toggle");
   const nav = document.querySelector(".site-nav");
 
   const closeMenu = () => {
-    if (!navToggle || !nav) return;
-    navToggle.setAttribute("aria-expanded", "false");
+    if (!toggle || !nav) return;
+    toggle.setAttribute("aria-expanded", "false");
     nav.classList.remove("is-open");
     document.body.classList.remove("menu-open");
   };
 
-  if (navToggle && nav) {
-    navToggle.addEventListener("click", () => {
-      const isOpen = navToggle.getAttribute("aria-expanded") === "true";
-      navToggle.setAttribute("aria-expanded", String(!isOpen));
-      nav.classList.toggle("is-open", !isOpen);
-      document.body.classList.toggle("menu-open", !isOpen);
+  if (toggle && nav) {
+    toggle.addEventListener("click", () => {
+      const next = toggle.getAttribute("aria-expanded") !== "true";
+      toggle.setAttribute("aria-expanded", String(next));
+      nav.classList.toggle("is-open", next);
+      document.body.classList.toggle("menu-open", next);
     });
-
     nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
     window.addEventListener("resize", () => {
       if (window.innerWidth >= 920) closeMenu();
@@ -45,41 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
       success.setAttribute("tabindex", "-1");
       success.focus();
     }
-  }
-
-  const lightbox = document.querySelector(".lightbox");
-  if (lightbox) {
-    const visual = lightbox.querySelector(".lightbox-visual");
-    const caption = lightbox.querySelector(".lightbox-caption");
-    const closeButton = lightbox.querySelector(".lightbox-close");
-    let previousFocus = null;
-
-    const closeLightbox = () => {
-      lightbox.classList.remove("is-open");
-      lightbox.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("lightbox-open");
-      if (previousFocus) previousFocus.focus();
-    };
-
-    document.querySelectorAll(".gallery-item").forEach((item) => {
-      item.addEventListener("click", () => {
-        previousFocus = item;
-        caption.textContent = item.dataset.caption || "TT Security installation in Sydney";
-        visual.style.background = getComputedStyle(item.querySelector(".gallery-visual")).background;
-        lightbox.classList.add("is-open");
-        lightbox.setAttribute("aria-hidden", "false");
-        document.body.classList.add("lightbox-open");
-        closeButton.focus();
-      });
-    });
-
-    closeButton.addEventListener("click", closeLightbox);
-    lightbox.addEventListener("click", (event) => {
-      if (event.target === lightbox) closeLightbox();
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && lightbox.classList.contains("is-open")) closeLightbox();
-    });
   }
 
   const year = document.querySelector("[data-year]");
